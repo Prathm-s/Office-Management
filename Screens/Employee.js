@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, View  } from 'react-native'
+import { Pressable, StyleSheet, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Emp } from '../components'
 import { database } from '../src/firebase/config';
@@ -34,7 +34,7 @@ const Employee = ({ navigation }) => {
 
     const Employees = emp.map((item, index) => {
         return <Pressable onPress={() => { }}>
-            <Emp name={item.name} />
+            <Emp name={item.name} id={item.id} />
         </Pressable>
     })
 

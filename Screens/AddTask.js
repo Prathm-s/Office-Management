@@ -7,6 +7,7 @@ import { addDoc, collection, doc, setDoc, query, getDocs } from 'firebase/firest
 import { database } from '../src/firebase/config'
 import { getAuth } from 'firebase/auth'
 import { DatePickerModal } from 'react-native-paper-dates';
+import { TimePickerModal } from 'react-native-paper-dates'
 import 'intl';
 import 'intl/locale-data/jsonp/en';
 import { ScrollView } from 'react-native'
@@ -14,8 +15,14 @@ import { Emp } from '../components'
 import * as SMS from 'expo-sms';
 
 const AddTask = ({ navigation }) => {
+    //Date Picker 
     const [date, setDate] = React.useState(undefined);
     const [open, setOpen] = React.useState(false);
+    //Time Picker
+    const [time, setTime] = React.useState(undefined);
+    const [openTime, setOpenTime] = React.useState(false);
+
+
     const [employees, setEmployees] = useState([])
     const [backEmployees, setBackEmployees] = useState([])
 
@@ -34,7 +41,7 @@ const AddTask = ({ navigation }) => {
         getEmployees()
     }, [])
 
-
+    //Date Picker 
     const onDismissSingle = React.useCallback(() => {
         setOpen(false);
     }, [setOpen]);
@@ -46,6 +53,21 @@ const AddTask = ({ navigation }) => {
         },
         [setOpen, setDate]
     );
+
+    //Time Picker 
+    const onDismissSingleTime = React.useCallback(() => {
+        setOpenTime(false);
+    }, [setOpenTime]);
+
+    const onConfirmSingleTime = React.useCallback(
+        (params) => {
+            console.log(params)
+            setOpenTime(false);
+            setTime(params);
+        },
+        [setOpenTime, setTime]
+    );
+
 
 
     const [task, setTask] = useState({
@@ -79,7 +101,7 @@ const AddTask = ({ navigation }) => {
             return
         }
 
-        await addDoc(collection(database, "Task"), { ...task, 'deadline': date.toISOString().slice(0, 10) + '', 'assigned': employees[selected] })
+        await addDoc(collection(database, "Task"), { ...task, 'deadline': date.toISOString().slice(0, 10) + '', 'assigned': employees[selected], "time": time })
             .then((Response) => {
                 sendMessage()
                 alert("task has been stored successfully!")
@@ -118,7 +140,7 @@ const AddTask = ({ navigation }) => {
 
     const getEmployee = (field, name) => {
         const filtered = backEmployees.filter((item) => item.name.toLowerCase().includes(name.toLowerCase()))
-       
+
         setEmployees(filtered)
     }
 
@@ -140,7 +162,7 @@ const AddTask = ({ navigation }) => {
 
 
     return (
-        <KeyboardAvoidingView style={{ ...styles.mainContainer, backgroundColor: colors.onSecondary }} behavior="padding">
+        <ScrollView style={{ ...styles.mainContainer, backgroundColor: colors.onSecondary }} >
 
             <Portal>
                 <Dialog visible={visible} onDismiss={hideDialog}>
@@ -162,6 +184,8 @@ const AddTask = ({ navigation }) => {
                 </Dialog>
             </Portal>
             <View>
+
+
                 <Input label="Customer Name" field="name" CallBackFunction={getChangedText} />
                 <Input label="Mobile" field="mobile" CallBackFunction={getChangedText} inputMode={'numeric'} maxLength={10} />
                 <Input label="Address" field="address" CallBackFunction={getChangedText} />
@@ -176,6 +200,16 @@ const AddTask = ({ navigation }) => {
                     </View>
 
                 </View>
+
+                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+
+                    <Input style={{ flex: 1, marginRight: 10 }} label="Time" field="Time" CallBackFunction={getChangedText} value={time != undefined ? time.hours + ":" + time.minutes : time} disabled={true} />
+                    <View>
+                        <Button onPress={() => { setOpenTime(true) }} mode='contained' >Pick Time </Button>
+                    </View>
+
+                </View>
+
 
                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 10 }}>
 
@@ -197,6 +231,14 @@ const AddTask = ({ navigation }) => {
                     onConfirm={onConfirmSingle}
                 />
 
+
+                <TimePickerModal
+                    visible={openTime}
+                    onDismiss={onDismissSingleTime}
+                    onConfirm={onConfirmSingleTime}
+                    hours={12}
+                    minutes={14}
+                />
                 <View style={{ marginTop: 20 }}>
                     <Button
                         mode='contained'
@@ -206,7 +248,7 @@ const AddTask = ({ navigation }) => {
 
             </View>
 
-        </KeyboardAvoidingView>
+        </ScrollView>
     )
 }
 

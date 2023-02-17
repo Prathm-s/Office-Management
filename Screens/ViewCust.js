@@ -18,6 +18,7 @@ const ViewCust = ({ navigation, route }) => {
     const auth = getAuth()
     const user = auth.currentUser
     const cid = route.params.item.id
+
     const { colors } = useTheme()
     const [customer, setCustomer] = useState({ visits: [] })
     const [reload, setReload] = useState(false)
@@ -56,28 +57,12 @@ const ViewCust = ({ navigation, route }) => {
         const docRef = doc(database, "Task", id)
         await getDoc(docRef).then((response) => {
             setCustomer(response.data())
+
             setReload(!reload)
         }).catch((error) => { return null })
 
     }
 
-
-    const options = [
-        {
-            label: "Prathmesh",
-            value: "Prathmesh"
-        },
-        {
-            label: "Bhairav",
-            value: "Bhairav"
-        },
-
-    ]
-
-
-    const getSelectedOption = (item, index) => {
-        console.log(item, index)
-    }
 
     //task to perform 
     const doneTask = () => {
@@ -149,7 +134,7 @@ const ViewCust = ({ navigation, route }) => {
                                 incompleteTask()
                             }
                             hideDialog()
-                        }}>{status=="incomplete"?'Incomplete':'Done'}</Button>
+                        }}>{status == "incomplete" ? 'Incomplete' : 'Done'}</Button>
                     </Dialog.Actions>
                 </Dialog>
             </Portal>
@@ -167,7 +152,11 @@ const ViewCust = ({ navigation, route }) => {
                     <TextLabel label={"Issue"} text={customer.issue} />
 
                     <TextLabel label={"Address"} text={customer.address} />
-                    <TextLabel label={"Assigned to "} text={customer.assigned == undefined ? "Testing" : customer.assigned.name} />
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                        <TextLabel label={"Assigned to "} text={customer.assigned == undefined ? "Testing" : customer.assigned.name} />
+                        <TextLabel label={"Time"} text={route.params.item.time.hours + ":" + route.params.item.time.minutes} />
+
+                    </View>
 
 
                     {/* <Text variant="bodyMedium">Deadline: {customer.deadline}</Text>

@@ -5,7 +5,7 @@ import { getAuth } from 'firebase/auth'
 import { doc, getDoc } from 'firebase/firestore'
 import { database } from '../src/firebase/config'
 import { Button, Text, useTheme } from 'react-native-paper'
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Setting = ({ navigation }) => {
     const auth = getAuth()

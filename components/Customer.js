@@ -17,19 +17,6 @@ const Customer = (props) => {
             }}
             onPress={() => { props.navigation.navigate("ViewCust", { item: props.item }) }}
         >
-            {/* <View style={styles.subContainer}>
-                <Text style={{ fontWeight: '500' }}>
-                    {props.item.name+" "}
-                    {props.item.status=="done"?<Text style={{fontSize:8,fontWeight:'normal',backgroundColor:'limegreen',padding:2,borderRadius:4}}>Done</Text>:""}
-                    {props.item.status == "inprogress"? <Text style={{fontSize:8,fontWeight:'normal',backgroundColor:'#FFE8BA',padding:2,borderRadius:4}}>In Progress</Text> :""}
-                    {props.item.status == "failed"? <Text style={{color:'white',fontSize:8,fontWeight:'normal',backgroundColor:'red',padding:2,borderRadius:4}}>Failed</Text> :""}
-+ " " + (props.item.status == "inprogress" ? ("-> " + props.item.visits.at(-1).name) : "")
-                </Text>
-                <Text style={{ color: 'gray' }}>{props.item.issue}</Text>
-            </View>
-            <View style={{ backgroundColor: 'white', borderRadius: 40, padding: 10 }}>
-                <MaterialIcons name="call" size={24} color="black" />
-            </View> */}
 
             <List.Item
 

@@ -14,27 +14,24 @@ const Login = ({ navigation }) => {
     const [loginRefresh, setLoginRefresh] = useState(false)
 
     const [info, setInfo] = useState({
-        // "email": "bsk6383@gmail.com",
-        // "password": "123456"
+    
     })
-    const getChangedText = (fieldName, text) => {
-        console.log(text)
-    }
 
-    useEffect(() => {
-        // console.log(info)
-        login(info.email,info.password)
-    }, [loginRefresh])
 
-    useEffect(() => {
-        const user = getLoggedUser().then((res) => {
-            setInfo(res)
-            setLoginRefresh(!loginRefresh)
-        }).catch((error) => {
+    // useEffect(() => {
+    //     // console.log(info)
+    //     login(info.email,info.password)
+    // }, [loginRefresh])
+
+    // useEffect(() => {
+    //     const user = getLoggedUser().then((res) => {
+    //         setInfo(res)
+    //         setLoginRefresh(!loginRefresh)
+    //     }).catch((error) => {
             
-        })
+    //     })
 
-    }, [])
+    // }, [])
 
     const getLoggedUser = async () => {
         try {
@@ -49,7 +46,7 @@ const Login = ({ navigation }) => {
     const login = (email, password) => {
         signInWithEmailAndPassword(auth, email, password)
             .then((response) => {
-                saveValueLocally()
+                // saveValueLocally()
                 navigation.navigate("Home")
             }).catch((error) => {
                 console.log(error)
@@ -82,7 +79,6 @@ const Login = ({ navigation }) => {
                 style={{ marginVertical: 20 }}
                 mode='contained'
                 onPress={() => {
-                    // navigation.navigate("Home")
                     loginPressed()
                 }}
             >Login</Button>

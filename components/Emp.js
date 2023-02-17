@@ -1,12 +1,19 @@
 import { Pressable, StyleSheet, View } from 'react-native'
 import { Divider, List, Menu, Button, Text } from 'react-native-paper'
 import React from 'react'
+import { getAuth } from 'firebase/auth'
+
 
 const Emp = (props) => {
     const [visible, setVisible] = React.useState(false);
     const openMenu = () => setVisible(true);
     const closeMenu = () => setVisible(false);
 
+    const deleteUser = () => {
+        // getAuth.deleteUser(props.id)
+        //     .then(res => alert("Deleted Successfully!"))
+        //     .catch(error => alert("Error while deleting"))
+    }
 
     return (
         <View>
@@ -20,7 +27,7 @@ const Emp = (props) => {
                     onDismiss={closeMenu}
                     anchor={<Button onPress={openMenu}> Options </Button>}>
                     <Menu.Item onPress={() => { }} title="View" />
-                    <Menu.Item onPress={() => { }} title="Delete" />
+                    <Menu.Item onPress={deleteUser} title="Delete" />
 
                 </Menu>
                 }
