@@ -19,19 +19,17 @@ const Login = ({ navigation }) => {
 
 
     // useEffect(() => {
-    //     // console.log(info)
     //     login(info.email,info.password)
     // }, [loginRefresh])
 
-    // useEffect(() => {
-    //     const user = getLoggedUser().then((res) => {
-    //         setInfo(res)
-    //         setLoginRefresh(!loginRefresh)
-    //     }).catch((error) => {
-            
-    //     })
+    useEffect(() => {
+        const user = getLoggedUser().then((res) => {
+            // setInfo(res)
+            if(res!=null) login(res.email,res.password)
+            // setLoginRefresh(!loginRefresh)
+        })
 
-    // }, [])
+    }, [])
 
     const getLoggedUser = async () => {
         try {
@@ -46,7 +44,7 @@ const Login = ({ navigation }) => {
     const login = (email, password) => {
         signInWithEmailAndPassword(auth, email, password)
             .then((response) => {
-                // saveValueLocally()
+                saveValueLocally()
                 navigation.navigate("Home")
             }).catch((error) => {
                 console.log(error)

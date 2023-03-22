@@ -13,9 +13,15 @@ const Home = ({ navigation }) => {
 
     const auth = getAuth();
     const userInfo = auth.currentUser;
+
     const [completed, setCompleted] = useState(false)
     const [pending, setPending] = useState(false)
     const [failed, setFailed] = useState(false)
+    const [self, setSelf] = useState(false)
+    const [unpaid, setUnpaid] = useState(false)
+
+
+
     const { colors } = useTheme()
     const isFocused = useIsFocused()
     const [user, setUser] = useState([])
@@ -23,17 +29,18 @@ const Home = ({ navigation }) => {
 
 
     useEffect(() => {
-        getUserDeatils() 
+        getUserDeatils()
     }, [isFocused])
 
-   
+
 
     useEffect(() => {
         filterData()
-    }, [completed, pending, failed])
+    }, [completed, pending, failed, self,unpaid])
 
 
     const filterData = () => {
+
         const filtered = backupuser.filter((item) => {
             if (item.status == "done" && completed) {
                 return item
@@ -41,7 +48,13 @@ const Home = ({ navigation }) => {
                 return item
             } else if ((item.status == "failed" || item.status == "incomplete") && failed) {
                 return item
-            } else if (!(completed || failed || pending)) { return item }
+            } else if (self && userInfo.uid == item.assigned.id) {
+                // get current user name and assigned name if both are equal then return item 
+                return item
+            }else if( unpaid && item.pending ){
+                return item
+            }
+            else if (!(completed || failed || pending || self || unpaid )) { return item }
         })
         setUser(filtered)
     }
@@ -63,7 +76,7 @@ const Home = ({ navigation }) => {
     }
 
     const filterUsers = (field, name) => {
-        const filtered = backupuser.filter((item) => item.name.toLowerCase().includes(name.toLowerCase()))
+        const filtered = backupuser.filter((item) => item.name.toLowerCase().includes(name.toLowerCase()) || item.assigned.name.toLowerCase().includes(name.toLowerCase()))
         setUser(filtered)
 
     }
@@ -79,7 +92,7 @@ const Home = ({ navigation }) => {
         <View style={{ ...styles.homeContainer, backgroundColor: colors.onSecondary }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                 {/* <Search style={{ flex: 1 }} filterCallBack={filterUsers} /> */}
-                <Input label={"Serach Customer"} CallBackFunction={filterUsers} style={{ flex: 1 }} />
+                <Input label={"Search Customer"} CallBackFunction={filterUsers} style={{ flex: 1 }} />
                 <Pressable
                     style={{ marginLeft: 10 }}
                     onPress={() => {
@@ -89,18 +102,22 @@ const Home = ({ navigation }) => {
                 </Pressable>
             </View>
 
-        
+
 
             <View style={{ flex: 1 }}>
 
                 <Text style={{ marginVertical: 20, fontWeight: '500' }}>Milestones</Text>
                 <View style={{ flexDirection: 'row', marginBottom: 10 }}>
 
-                    <Chip icon="check" onPress={() => setCompleted(!completed)} mode={completed ? 'flat' : 'outlined'}>Completed</Chip>
+                    <Chip icon="check" onPress={() => setCompleted(!completed)} mode={completed ? 'flat' : 'outlined'}>Done</Chip>
                     <Chip icon="bell-alert" style={{ marginHorizontal: 10 }} onPress={() => setFailed(!failed)} mode={failed ? 'flat' : 'outlined'}>Failed</Chip>
-                    <Chip icon="account-clock" onPress={() => setPending(!pending)} mode={pending ? 'flat' : 'outlined'}>Progress</Chip>
+                    <Chip icon="account-clock" style={{ marginRight: 10 }} onPress={() => setPending(!pending)} mode={pending ? 'flat' : 'outlined'}>Visit</Chip>
                 </View>
+                <View style={{ flexDirection: 'row', marginBottom: 10 }}>
 
+                    <Chip icon="account-arrow-up" style={{ marginRight: 10 }} onPress={() => setSelf(!self)} mode={self ? 'flat' : 'outlined'}>Me</Chip>
+                    <Chip icon="account-cash" onPress={() => setUnpaid(!unpaid)} mode={unpaid ? 'flat' : 'outlined'}>Pending</Chip>
+                </View>
 
                 <ScrollView>
                     {Users}

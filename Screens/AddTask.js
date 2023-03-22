@@ -61,9 +61,15 @@ const AddTask = ({ navigation }) => {
 
     const onConfirmSingleTime = React.useCallback(
         (params) => {
-            console.log(params)
+          
+            let temp = params.hours % 12
+            const hour = temp == 0? 12: temp 
             setOpenTime(false);
-            setTime(params);
+            setTime({
+                hours:hour,
+                minutes:params.minutes
+            })
+            // setTime(params);
         },
         [setOpenTime, setTime]
     );
@@ -74,7 +80,8 @@ const AddTask = ({ navigation }) => {
         "priority": '0',
         "status": 'incomplete',
         "visits": [],
-        "deadline": ""
+        "deadline": "",
+        "pending":false
     })
 
     const getEmployees = async () => {
@@ -119,7 +126,7 @@ const AddTask = ({ navigation }) => {
             // do your SMS stuff here
             const { result } = await SMS.sendSMSAsync(
                 employees[selected].mobile,
-                'New task has been assigned to you! Customer name:' + task.name + '  Check office app for more details.',
+                'New task has been assigned to you! Customer name:' + task.name + ', Mobile: '+ task.mobile +', Deadline :'+date.toISOString().slice(0,10)+' Time:'+ time.hours +':'+time.minutes +'  Check office app for more details.',
             );
             console.log(result)
 

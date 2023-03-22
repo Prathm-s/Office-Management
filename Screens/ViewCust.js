@@ -6,12 +6,13 @@ import TextLabel from '../components/TextLabel'
 import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import Piker from '../components/Piker';
-import { Card, Button, Text, useTheme, Dialog, Portal, List } from 'react-native-paper';
+import { Card, Button, Text, useTheme, Dialog, Portal, List, Checkbox } from 'react-native-paper';
 import Visits from '../components/Visits';
 import { doc, setDoc, getDoc } from 'firebase/firestore'
 import { database } from '../src/firebase/config';
 import { getAuth } from 'firebase/auth';
 import { Linking } from 'react-native';
+
 
 
 const ViewCust = ({ navigation, route }) => {
@@ -30,6 +31,7 @@ const ViewCust = ({ navigation, route }) => {
     const [visible, setVisible] = React.useState(false);
     const showDialog = () => setVisible(true);
     const hideDialog = () => setVisible(false);
+    const [checked, setChecked] = useState(false);
 
 
     useEffect(() => {
@@ -70,10 +72,10 @@ const ViewCust = ({ navigation, route }) => {
         const currentEmp = {
             ...visitInfo,
             name: me.name,
-            date: new Date().toISOString().slice(0, 10),
+            date: new Date(),
             status: "done"
         }
-        setDoc(taskRef, { status: 'done', visits: [...customer.visits, currentEmp] }, { merge: true }).then((response) => {
+        setDoc(taskRef, { status: 'done', pending: !checked, visits: [...customer.visits, currentEmp] }, { merge: true }).then((response) => {
             console.log("Updated!!")
         }).catch((error) => console.log(error))
         setReload(!reload)
@@ -84,10 +86,10 @@ const ViewCust = ({ navigation, route }) => {
         const currentEmp = {
             ...visitInfo,
             name: me.name,
-            date: new Date().toISOString().slice(0, 10),
+            date: new Date(),
             status: "incomplete"
         }
-        setDoc(taskRef, { status: 'failed', visits: [...customer.visits, currentEmp] }, { merge: true }).then((response) => {
+        setDoc(taskRef, { status: 'failed', pending: !checked, visits: [...customer.visits, currentEmp] }, { merge: true }).then((response) => {
             console.log("Updated!!")
         }).catch((error) => console.log(error))
         setReload(!reload)
@@ -99,10 +101,10 @@ const ViewCust = ({ navigation, route }) => {
         const currentEmp = {
             ...visitInfo,
             name: me.name,
-            date: new Date().toISOString().slice(0, 10),
+            date: new Date(),
 
         }
-        setDoc(taskRef, { status: 'inprogress', visits: [...customer.visits, currentEmp] }, { merge: true }).then((response) => {
+        setDoc(taskRef, { status: 'inprogress', pending: !checked, visits: [...customer.visits, currentEmp] }, { merge: true }).then((response) => {
             console.log("Updated!!")
         }).catch((error) => console.log(error))
         setReload(!reload)
@@ -125,6 +127,14 @@ const ViewCust = ({ navigation, route }) => {
                         <Text>Please add amount and note for refernce </Text>
                         <Input label="Note" field="note" CallBackFunction={getChangedText} placeholder={customer.note} />
                         <Input label='Total Amount' field="amount" CallBackFunction={getChangedText} />
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <Text>Paid</Text>
+                            <Checkbox status={checked ? 'checked' : 'unchecked'}
+                                onPress={() => {
+                                    setChecked(!checked);
+                                }} />
+                        </View>
+
                     </Dialog.Content>
                     <Dialog.Actions>
                         <Button onPress={() => {
@@ -170,7 +180,6 @@ const ViewCust = ({ navigation, route }) => {
                         Linking.openURL(`tel:${customer.mobile}`)
                     }}>Call</Button>
                     <Button disabled={customer.status == "inprogress" || customer.status == "done" ? true : false} onPress={() => {
-                        console.log("Visisting")
                         inProgress()
                     }}>Visit</Button>
                 </Card.Actions>

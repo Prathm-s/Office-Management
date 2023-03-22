@@ -22,7 +22,7 @@ const Emp = (props) => {
                     <List.Icon icon="account" />
                     <Text style={{ marginLeft: 10, fontSize: 16 }}>{props.name}</Text>
                 </View>
-                {props.options == false ? <View></View> : <Menu
+                {/* {props.options == false ? <View></View> : <Menu
                     visible={visible}
                     onDismiss={closeMenu}
                     anchor={<Button onPress={openMenu}> Options </Button>}>
@@ -30,7 +30,7 @@ const Emp = (props) => {
                     <Menu.Item onPress={deleteUser} title="Delete" />
 
                 </Menu>
-                }
+                } */}
 
             </View>
 
