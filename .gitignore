@@ -14,5 +14,3 @@ keystore.jks
 keystore.txt
 # macOS
 .DS_Store
-
-credentials.js
